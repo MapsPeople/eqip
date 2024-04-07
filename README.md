@@ -20,14 +20,14 @@ Hereafter you have the following options:
 
 clone the repository into the plugins directory of your qgis installation.
 
-for windows and with the profile default this is:
+for windows and with the profile default, this is:
 
 AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins
 
 
 ### Install by symlinking into Qgis plugins directory
 
-for the default profile this is:
+for the default profile, this is:
 
 run python dev_install_plugin.py
 
