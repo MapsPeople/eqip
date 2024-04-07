@@ -5,7 +5,7 @@
 name=Eqip
 qgisMinimumVersion=3.0
 description=QGIS Pip Management
-version=0.1.9
+version=0.2.1
 author=heider
 email=chen@mapspeople.com
 
@@ -24,8 +24,9 @@ tags=python, live, inspection, debugging, shapely, geometry, collections
 category=Plugins
 #Category of the plugin: Raster, Vector, Database or Web
 
-experimental=True
-deprecated=False # deprecated flag (applies to the whole plugin, not just a single version)
+experimental=False
+deprecated=False
+# deprecated flag (applies to the whole plugin, not just a single version)
 
 # Since QGIS 3.8, a comma separated list of plugins to be installed
 # (or upgraded) can be specified.
@@ -33,6 +34,7 @@ deprecated=False # deprecated flag (applies to the whole plugin, not just a sing
 # plugin_dependencies=
 
 hasProcessingProvider=no
-server=False # If the plugin can run on QGIS Server.
+server=False
+# If the plugin can run on QGIS Server.
 
-changelog=0.0.1 Introduced some very nice features
+changelog=0.2.0 CI Release
