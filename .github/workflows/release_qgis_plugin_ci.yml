@@ -32,15 +32,6 @@ jobs:
           --github-token ${{ secrets.GITHUB_TOKEN }}
           --osgeo-username ${{ secrets.OSGEO_USER }}
           --osgeo-password ${{ secrets.OSGEO_PASSWORD }}
-
-        #--plugin-repo-url PLUGIN_REPO_URL
-        #--alternative-repo-url ALTERNATIVE_REPO_URL
-
-      - name: Deploy Plugin Github Repo
-        run: >-
-          qgis-plugin-ci
-          release ${GITHUB_REF/refs\/tags\//}
-          --github-token ${{ secrets.GITHUB_TOKEN }}
           --create-plugin-repo
 
       - name: Repository Dispatch
