@@ -12,13 +12,13 @@
 import warnings
 
 # noinspection PyUnresolvedReferences
-from qgis.PyQt.QtCore import QCoreApplication, QLocale, QTranslator
-
-# noinspection PyUnresolvedReferences
 from qgis.core import QgsSettings
 
 # noinspection PyUnresolvedReferences
 from qgis.gui import QgisInterface
+
+# noinspection PyUnresolvedReferences
+from qgis.PyQt.QtCore import QCoreApplication, QLocale, QTranslator
 
 from eqip import PLUGIN_DIR, PROJECT_NAME
 
