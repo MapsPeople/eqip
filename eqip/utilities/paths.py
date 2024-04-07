@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from typing import Mapping
 
+# noinspection PyUnresolvedReferences
 from qgis.PyQt.QtGui import QIcon
 
 from .. import PROJECT_NAME

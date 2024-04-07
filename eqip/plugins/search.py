@@ -36,6 +36,7 @@ def find_qgis_plugins(path: Path) -> Tuple:
 if __name__ == "__main__":
 
     def asijdsa():
+        # noinspection PyUnresolvedReferences
         from qgis.utils import plugin_paths
 
         for plugin_path in plugin_paths:

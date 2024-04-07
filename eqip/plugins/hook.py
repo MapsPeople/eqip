@@ -1,7 +1,9 @@
 import logging
 
+# noinspection PyUnresolvedReferences
 import pyplugin_installer
-import qgis
+
+# noinspection PyUnresolvedReferences
 from qgis.core import QgsProviderRegistry
 
 __all__ = [
@@ -14,7 +16,6 @@ __all__ = [
 
 __doc__ = r"""This assume that pyplugin_installer.instance().processDependencies, exists and get called when a new
 plugin is added"""
-
 
 from .requirement_resolution import install_plugin_requirements
 
@@ -126,6 +127,9 @@ def is_hook_active() -> bool:
 if __name__ == "__main__":
 
     def main():
+        # noinspection PyUnresolvedReferences
+        import qgis
+
         print(QgsProviderRegistry.instance().pluginList())
         print(qgis.utils.available_plugins)
         print(qgis.utils.plugin_list)
