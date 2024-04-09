@@ -9,10 +9,8 @@
 
 """
 
+import logging
 import warnings
-
-# noinspection PyUnresolvedReferences
-from qgis.PyQt.QtCore import QCoreApplication, QLocale, QTranslator
 
 # noinspection PyUnresolvedReferences
 from qgis.core import QgsSettings
@@ -20,12 +18,10 @@ from qgis.core import QgsSettings
 # noinspection PyUnresolvedReferences
 from qgis.gui import QgisInterface
 
-from eqip import PLUGIN_DIR, PROJECT_NAME
-
 # noinspection PyUnresolvedReferences
-from .resources import *  # Initialize Qt resources from file resources.py # TODO: MAKE AN ASSERT ON THIS BEING IMPORTED? maybe add to devpack dev-tools
+from qgis.PyQt.QtCore import QCoreApplication, QLocale, QTranslator
 
-assert qt_resource_data is not None
+from eqip import PLUGIN_DIR, PROJECT_NAME
 
 MENU_INSTANCE_NAME = f"&{PROJECT_NAME.lower()}"
 
@@ -34,6 +30,34 @@ DEBUGGING_PORT = 6969
 VERBOSE = False
 DEBUGGING = False
 FORCE_RELOAD = False
+
+logger = logging.getLogger(__name__)
+
+if True:  # BOOTSTRAPPING EQIP ITSELF
+    from .configuration.pip_parsing import get_requirements_from_file
+    from .configuration.piper import (
+        install_requirements_from_name,
+        is_package_updatable,
+    )
+
+    UPDATABLE_REQS = [
+        req.name
+        for req in get_requirements_from_file(PLUGIN_DIR / "requirements.txt")
+        if is_package_updatable(req.name)
+    ]
+
+    if UPDATABLE_REQS:
+        install_requirements_from_name(*UPDATABLE_REQS, upgrade=True)
+        for u in UPDATABLE_REQS:
+            from warg import reload_module
+
+            logger.info(f"reloading module {u}")
+            reload_module(u)
+
+# noinspection PyUnresolvedReferences
+from .resources import *  # Initialize Qt resources from file resources.py # TODO: MAKE AN ASSERT ON THIS BEING IMPORTED? maybe add to devpack dev-tools
+
+assert qt_resource_data is not None
 
 
 class EqipPlugin:
@@ -50,30 +74,9 @@ class EqipPlugin:
         self.iface = iface  # Save reference to the QGIS interface
         self.plugin_dir = PLUGIN_DIR
 
-        if True:  # BOOTSTRAPPING EQIP ITSELF
-            from .configuration.pip_parsing import get_requirements_from_file
-            from .configuration.piper import (
-                install_requirements_from_name,
-                is_package_updatable,
-            )
-
-            reqs = [
-                req.name
-                for req in get_requirements_from_file(PLUGIN_DIR / "requirements.txt")
-                if is_package_updatable(req.name)
-            ]
-
-            if reqs:
-                install_requirements_from_name(*reqs)
-
         locale = QgsSettings().value(
             f"{PROJECT_NAME}/locale/userLocale", QLocale().name()
         )
-
-        if VERBOSE or DEBUGGING or FORCE_RELOAD:  # reload warg
-            from warg import reload_module
-
-            reload_module("warg")
 
         IGNORE = """if DEBUGGING:
             import pydevd_pycharm
