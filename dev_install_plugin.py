@@ -1,16 +1,19 @@
-from logging import warn
+import logging
 from pathlib import Path
 
-from warg import is_windows
+from warg import is_mac, is_windows
 
 from plugin_config import PROFILE, QGIS_APP_PATH
 
 if is_windows():
     b = QGIS_APP_PATH.user_config
+elif is_mac():
+    # Path.expanduser()
+    b = QGIS_APP_PATH.user_data  # /Users/maha/Library/Application Support/QGIS/QGIS3/
 else:
     b = QGIS_APP_PATH.user_data
 
-source_folder = Path(__file__).parent.absolute() / "eqip"
+source_folder = (Path(__file__).parent / "eqip").absolute()
 target_folder = b / "profiles" / PROFILE / "python" / "plugins" / source_folder.stem
 
 if False:
@@ -59,7 +62,7 @@ if __name__ == "__main__":
         try:
             target_folder.symlink_to(source_folder)
         except OSError as e:
-            warn(
+            logging.warning(
                 "Probably missing privileges to make symlink in target parent folder, try running symlinking as administrator or change write access('may be read only') / owner."
             )
             raise e
