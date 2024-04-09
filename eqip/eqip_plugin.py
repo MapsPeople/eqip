@@ -48,11 +48,12 @@ if True:  # BOOTSTRAPPING EQIP ITSELF
 
     if UPDATABLE_REQS:
         install_requirements_from_name(*UPDATABLE_REQS, upgrade=True)
-        for u in UPDATABLE_REQS:
-            from warg import reload_module
+        if FORCE_RELOAD:
+            for u in UPDATABLE_REQS:
+                from warg import reload_module
 
-            logger.info(f"reloading module {u}")
-            reload_module(u)
+                logger.info(f"reloading module {u}")
+                reload_module(u)
 
 # noinspection PyUnresolvedReferences
 from .resources import *  # Initialize Qt resources from file resources.py # TODO: MAKE AN ASSERT ON THIS BEING IMPORTED? maybe add to devpack dev-tools
