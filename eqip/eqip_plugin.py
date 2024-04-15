@@ -55,10 +55,10 @@ if True:  # BOOTSTRAPPING EQIP ITSELF
                 logger.info(f"reloading module {u}")
                 reload_module(u)
 
-# noinspection PyUnresolvedReferences
-from .resources import *  # Initialize Qt resources from file resources.py # TODO: MAKE AN ASSERT ON THIS BEING IMPORTED? maybe add to devpack dev-tools
+    # noinspection PyUnresolvedReferences
+    from .resources import *  # Initialize Qt resources from file resources.py # TODO: MAKE AN ASSERT ON THIS BEING IMPORTED? maybe add to devpack dev-tools
 
-assert qt_resource_data is not None
+    assert qt_resource_data is not None
 
 
 class EqipPlugin:
