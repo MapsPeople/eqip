@@ -7,6 +7,8 @@ from typing import Tuple
 
 __all__ = ["find_qgis_plugins"]
 
+logger = logging.getLogger(__name__)
+
 
 def find_qgis_plugins(path: Path) -> Tuple:
     """for internal use: return list of plugins in given path"""

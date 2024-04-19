@@ -9,6 +9,8 @@ __all__ = [
     "install_plugin_requirements",
 ]
 
+logger = logging.getLogger(__name__)
+
 
 def get_requirements_file_path(
     qgis_plugin: str, requirements_file_name: str = "requirements.txt"

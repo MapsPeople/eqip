@@ -9,6 +9,8 @@
 
 """
 
+import logging
+
 from .constants import *
 
 
@@ -37,5 +39,13 @@ def classFactory(iface):  # pylint: disable=invalid-name
     """
     #
     from .eqip_plugin import EqipPlugin
+
+    if True:
+        try:
+            from jord.qgis_utilities.helpers import setup_logger
+
+            setup_logger(__name__, logger_level=logging.DEBUG)
+        except ImportError:
+            ...
 
     return EqipPlugin(iface)

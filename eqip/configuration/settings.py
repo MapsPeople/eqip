@@ -10,6 +10,7 @@ from .. import PROJECT_NAME
 qgis_project = QgsProject.instance()
 
 VERBOSE = False
+logger = logging.getLogger(__name__)
 
 
 def restore_default_project_settings(

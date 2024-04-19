@@ -8,6 +8,7 @@ __doc__ = r"""
 
 __all__ = ["EqipOptionsPage", "EqipOptionsPageFactory"]
 
+import logging
 from importlib import metadata
 from itertools import count
 
@@ -30,6 +31,7 @@ from qgis.PyQt.QtGui import QStandardItem, QStandardItemModel
 
 # noinspection PyUnresolvedReferences
 from qgis.PyQt.QtWidgets import QHBoxLayout, QMessageBox
+from qgis.utils import iface
 
 from .. import MANUAL_REQUIREMENTS, PLUGIN_DIR, PROJECT_NAME, VERSION
 from ..plugins import has_requirements_file
@@ -62,6 +64,7 @@ FORCE_RELOAD = False
 
 qgis_project = QgsProject.instance()
 OptionWidget, OptionWidgetBase = uic.loadUiType(resolve_path("options.ui", __file__))
+logger = logging.getLogger(__name__)
 
 
 class EqipOptionsPageFactory(QgsOptionsWidgetFactory):
@@ -204,6 +207,17 @@ class EqipOptionsWidget(OptionWidgetBase, OptionWidget):
             PLUGIN_DIR.parent / self.selected_plugin / "requirements.txt"
         )
 
+        if True:
+            reply = QMessageBox.question(
+                iface.mainWindow(),
+                "Continue?",
+                "Qgis Python interpreter will have to reload, do you wish close QGIS?",
+                QMessageBox.Yes,
+                QMessageBox.No,
+            )
+            if reply == QMessageBox.Yes:
+                iface.actionExit().trigger()
+
     def update_status_labels(self):
         if is_hook_active():
             self.enable_dep_hook_button.setEnabled(False)
@@ -276,6 +290,18 @@ class EqipOptionsWidget(OptionWidgetBase, OptionWidget):
             )
 
         self.populate_plugin_requirements()  # TODO: change are not necessarily reflected immediately, RESTART REQUIRED FOR NOW!!
+
+        if True:
+
+            reply = QMessageBox.question(
+                iface.mainWindow(),
+                "Continue?",
+                "Qgis Python interpreter will have to reload, do you wish close QGIS?",
+                QMessageBox.Yes,
+                QMessageBox.No,
+            )
+            if reply == QMessageBox.Yes:
+                iface.actionExit().trigger()
 
     def populate_plugin_requirements(self):
         if hasattr(self, "requirements_list_model"):

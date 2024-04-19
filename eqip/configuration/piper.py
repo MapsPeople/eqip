@@ -17,7 +17,6 @@ __all__ = [
     "get_installed_version",
 ]
 
-
 import ensurepip
 import json
 import logging
@@ -45,19 +44,35 @@ from .settings import VERBOSE, read_project_setting
 CUR_OS = sys.platform
 IS_WIN = any(CUR_OS.startswith(i) for i in ["win32", "cygwin"])
 IS_MAC = CUR_OS.startswith("darwin")
+logger = logging.getLogger(__name__)
+
+
+def log_subprocess_output(pipe):
+    for line in iter(pipe.readline, b""):  # b'\n'-separated lines
+        logger.info("got line from subprocess: %r", line)
 
 
 # @passes_kws_to(subprocess.check_call)
 def catching_callable(*args, **kwargs):
     try:
-        logging.warning(f"{list(args)}, {list(kwargs.items())}")
+        logger.info(f"{list(args)}, {list(kwargs.items())}")
 
         # subprocess.check_call(*args, **kwargs)
-        output = subprocess.check_output(*args, **kwargs)
+        # output = subprocess.check_output(*args, **kwargs)
         # subprocess.run(*args,**kwargs)
+
+        from subprocess import PIPE, STDOUT, Popen
+
+        process = Popen(*args, **kwargs, stdout=PIPE, stderr=STDOUT)
+        with process.stdout:
+            log_subprocess_output(process.stdout)
+        exitcode = process.wait()  # 0 means success
+        if exitcode:
+            logger.info("Success")
+
     except subprocess.CalledProcessError as e:
         output = (e.stderr, e.stdout, e)
-    logging.warning(output)
+        logger.warning(output)
 
 
 SP_CALLABLE = catching_callable  # subprocess.call
@@ -112,7 +127,7 @@ def get_qgis_python_interpreter_path() -> Optional[Path]:
         if not try_path.exists():
             try_path = interpreter_path.parent / "python3.exe"
             if not try_path.exists():
-                logging.error(f"Could not find python {try_path}")
+                logger.error(f"Could not find python {try_path}")
                 return None
         return try_path
 
@@ -121,7 +136,7 @@ def get_qgis_python_interpreter_path() -> Optional[Path]:
         if not try_path.exists():
             try_path = interpreter_path.parent / "bin" / "python3"
             if not try_path.exists():
-                logging.error(f"Could not find python {try_path}")
+                logger.error(f"Could not find python {try_path}")
                 return None
         return try_path
 
@@ -172,7 +187,7 @@ def install_requirements_from_file(
             )
         except Exception as e:
             if VERBOSE:
-                logging.info(f"{e}")
+                logger.info(f"{e}")
 
     req_path_str = str(requirements_path)
 
@@ -224,11 +239,15 @@ def install_requirements_from_file(
     elif True:
         install_pip_if_not_present()
 
+        cmd = [str(get_qgis_python_interpreter_path()), "-m", "pip", *args]
+
+        logger.info(f"Executing {cmd=}")
+
         if is_pip_installed():
-            SP_CALLABLE([str(get_qgis_python_interpreter_path()), "-m", "pip", *args])
+            SP_CALLABLE(cmd)
 
         else:
-            logging.info("PIP IS STILL MISSING!")
+            logger.info("PIP IS STILL MISSING!")
 
 
 def is_pip_installed():
@@ -237,14 +256,22 @@ def is_pip_installed():
         import pip
     except ImportError:
         pip_present = False
+
+    logger.info(f"{pip_present=}")
+
     return pip_present
 
 
 def install_pip_if_not_present(always_upgrade: bool = True):
     if not is_pip_installed() or always_upgrade:
+        logger.info(
+            f"Bootstrapping pip because {is_pip_installed()=} or {always_upgrade=}"
+        )
+
         if False:
             ensurepip.bootstrap(upgrade=True)
         else:
+
             SP_CALLABLE(
                 [
                     str(get_qgis_python_interpreter_path()),
@@ -323,7 +350,7 @@ def get_installed_version(
             return version.parse(dist.version)
     except Exception as e:
         if VERBOSE:
-            logging.error(e)
+            logger.error(e)
 
     return None
 
@@ -386,13 +413,13 @@ def get_versions_from_index(
         return (*sorted(releases, key=version.parse),)
     except InvalidVersion as e:  # VERSION NUMBER MAYBE BROKEN
         if VERBOSE:
-            logging.info(name, index, e)
+            logger.info(name, index, e)
 
         try:
             return [str(version.parse(list(releases.keys())[-1]))]
         except InvalidVersion as e:  # VERSION NUMBER MAYBE BROKEN, GIVE UP
             if VERBOSE:
-                logging.info(name, index, e)
+                logger.info(name, index, e)
 
             return None
 
@@ -450,7 +477,7 @@ def install_requirements_from_name(
                 )
             )
         except Exception as e:
-            logging.error(f"{e}")
+            logger.error(f"{e}")
 
     if ignore_editable_installs:
         try:
