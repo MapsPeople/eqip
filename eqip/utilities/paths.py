@@ -12,6 +12,8 @@ from ..configuration.settings import read_project_setting
 
 __all__ = ["resolve_path", "load_icon", "get_icon_path"]
 
+logger = logging.getLogger(__name__)
+
 
 def resolve_path(path: str, base_path: Path = None) -> str:
     """

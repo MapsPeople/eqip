@@ -61,6 +61,7 @@ HOOK_ART_DISABLED = r"""
           /    ::::.    \
 
 """
+logger = logging.getLogger(__name__)
 
 
 class PluginProcessDependenciesHook:

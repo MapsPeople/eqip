@@ -4,13 +4,15 @@ from typing import List, Union
 
 from packaging.requirements import Requirement
 
+logger = logging.getLogger(__name__)
+
 try:
     from pip._internal.network.session import PipSession
     from pip._internal.req import parse_requirements
     from pip._internal.req.req_file import ParsedRequirement
     from pip._internal.utils.packaging import get_requirement
 except ImportError as e:
-    logging.error(f"pip version is outdated, please upgrade, {e}")
+    logger.error(f"pip version is outdated, please upgrade, {e}")
 
 from urllib.parse import urlparse
 
@@ -30,6 +32,8 @@ def get_reqed(req: ParsedRequirement) -> Requirement:
     else:
         req_parsed = req_
 
+    logger.info(f"{req_parsed=}")
+
     try:
         return get_requirement(req_parsed)
     except:
@@ -46,6 +50,8 @@ def get_requirements_from_file(
     parsed_reqs = [
         get_reqed(ir) for ir in parse_requirements(file_path, session=session)
     ]
+
+    logger.info(f"{parsed_reqs=}")
 
     return [p for p in parsed_reqs if p]
 
