@@ -5,7 +5,7 @@
 name=Eqip
 qgisMinimumVersion=3.0
 description=QGIS Pip Management
-version=0.2.7
+version=0.2.8
 author=heider
 email=chen@mapspeople.com
 

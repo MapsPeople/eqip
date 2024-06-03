@@ -91,11 +91,13 @@ class InstallStateEnum(Enum):
 
 class UpgradeStrategyEnum(Enum):
     """
-    eager - all packages will be upgraded to the latest possible version. It should be noted here that pip’s current
+    eager - all packages will be upgraded to the latest possible version.
+    It should be noted here that pip’s current
     resolution algorithm isn’t even aware of packages other than those specified on the command line, and those
-    identified as dependencies. This may or may not be true of the new resolver.
+    identified as dependencies.
+    This may or may not be true of the new resolver.
 
-    only-if-needed - packages are only upgraded if they are named in the pip command or a requirement file (i.e,
+    only-if-needed - packages are only upgraded if they are named in the pip command or a requirement file (i.e.
     they are direct requirements), or an upgraded parent needs a later version of the dependency than is currently
     installed.
 
@@ -103,7 +105,7 @@ class UpgradeStrategyEnum(Enum):
     currently installed version fails to satisfy a requirement (either explicitly specified or a dependency).
 
     This is actually the “default” upgrade strategy when --upgrade is not set, i.e. pip install AlreadyInstalled and pip
-    install --upgrade --upgrade-strategy=to-satisfy-only AlreadyInstalled yield the same behavior.
+    install --upgrade --upgrade-strategy=to-satisfy-only AlreadyInstalled yield the same behaviour.
     """
 
     eager = "eager"
@@ -131,7 +133,7 @@ def get_qgis_python_interpreter_path() -> Optional[Path]:
                 return None
         return try_path
 
-    elif IS_MAC:
+    elif IS_MAC:  # /Applications/QGIS.app/Contents/MacOS/bin/python3
         try_path = interpreter_path.parent / "bin" / "python"
         if not try_path.exists():
             try_path = interpreter_path.parent / "bin" / "python3"
@@ -517,7 +519,7 @@ def install_requirements_from_name(
 def remove_requirements_from_name(*requirements_name: Iterable[str]) -> None:
     """
 
-    Multiple colliding versions may be installed at once, (conda, pip, ....)
+    Multiple colliding versions may be installed at once, (conda, pip, …)
     Repeat args let you choose how many times to try to uninstall the packages.
     """
     num_repeat: int = 1
@@ -530,7 +532,7 @@ def remove_requirements_from_name(*requirements_name: Iterable[str]) -> None:
             pip.main(args)
 
         elif False:
-            SP_CALLABLE(["pip"] + args)  # Use interpreter path instead
+            SP_CALLABLE(["pip"] + args)  # Use the interpreter path instead
 
         elif True:
             SP_CALLABLE(
